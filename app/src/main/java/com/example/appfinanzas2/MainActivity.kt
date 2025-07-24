@@ -1,29 +1,23 @@
 package com.example.appfinanzas2
 
-import AuthenticationScreen
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import com.example.appfinanzas2.ui.theme.AppFinanzas2Theme // Asegúrate que el nombre de tu tema sea correcto
+import androidx.appcompat.app.AppCompatActivity
+import com.example.appfinanzas2.pantallas.PantallaNavegacionActivity // Importa tu PantallaNavegacionActivity
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            // Llama al tema principal de tu aplicación
-            AppFinanzas2Theme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    // Aquí se llama a la pantalla de autenticación que creamos
-                    AuthenticationScreen()
-                }
-            }
-        }
+        // No hay setContentView aquí porque esta actividad ya no es la principal del launcher.
+        // Si necesitas que haga algo, lo harías aquí.
+        // Por ejemplo, si decides que esta Activity debe lanzar PantallaNavegacionActivity
+        // después de alguna verificación, podrías mantener el código de abajo.
+        // Sin embargo, si RegistroSesionActivity es el punto de entrada, este código no se ejecutará al inicio.
+
+        // Ejemplo: Si quieres que MainActivity lance PantallaNavegacionActivity
+        // después de que el usuario ya haya iniciado sesión (lógica de sesión simulada)
+        // val intent = Intent(this, PantallaNavegacionActivity::class.java)
+        // startActivity(intent)
+        // finish()
     }
 }
