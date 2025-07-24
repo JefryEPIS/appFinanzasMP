@@ -1,16 +1,15 @@
-package com.example.appfinanzas2.pantallas
-
-import com.example.appfinanzas2.R
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,167 +21,129 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.appfinanzas2.R // Asegúrate de que este import sea correcto
+
+@Preview()
+@Composable
+fun AuthenticationScreen() {
+    // 1. Un estado para controlar todo. Si es true, muestra Login. Si es false, muestra Registro.
+    var showLogin by remember { mutableStateOf(true) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        // --- Parte Superior Estática (nunca cambia) ---
+        Spacer(modifier = Modifier.height(32.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(painter = painterResource(id = R.drawable.logo_unap), contentDescription = "Logo 1", modifier = Modifier.size(80.dp))
+            Image(painter = painterResource(id = R.drawable.logo_sis), contentDescription = "Logo 2", modifier = Modifier.size(80.dp))
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("FinanzasMP", fontSize = 20.sp, style = MaterialTheme.typography.titleLarge)
+        Text("Monetiza tu vida", fontSize = 14.sp, textAlign = TextAlign.Center)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // 2. Pestañas que cambian el estado `showLogin`
+        TabRow(
+            selectedTabIndex = if (showLogin) 0 else 1,
+            containerColor = Color.Transparent
+        ) {
+            Tab(
+                selected = showLogin,
+                onClick = { showLogin = true },
+                text = { Text("Ingresar") }
+            )
+            Tab(
+                selected = !showLogin,
+                onClick = { showLogin = false },
+                text = { Text("Registrarse") }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // 3. AnimatedContent: El Animador
+        AnimatedContent(
+            targetState = showLogin,
+            transitionSpec = {
+                if (targetState) {
+                    // Animación para cuando aparece el Login (viene de la izquierda)
+                    slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(300)) togetherWith
+                            slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
+                } else {
+                    // Animación para cuando aparece el Registro (viene de la derecha)
+                    slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) togetherWith
+                            slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(300))
+                }
+            }, label = "Formulario animado"
+        ) { isLoginScreen ->
+            if (isLoginScreen) {
+                LoginForm()
+            } else {
+                RegistrationForm()
+            }
+        }
+    }
+}
+
 
 @Composable
-@Preview(showBackground = true)
-fun RegistrationScreen(){
+fun LoginForm() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        var usuario by remember { mutableStateOf("") }
+        var codigo by remember { mutableStateOf("") }
+        var contrasena by remember { mutableStateOf("") }
+        var contrasenaVisible by remember { mutableStateOf(false) }
 
-    // Estados para guardar lo que el usuario escribe en cada campo
-    var nombreCompleto by remember { mutableStateOf("") }
-    var usuario by remember { mutableStateOf("") }
-    var codigo by remember { mutableStateOf("") }
-    var correo by remember { mutableStateOf("") }
-    var contrasena by rememberSaveable { mutableStateOf("") }
-    var confirmarContrasena by rememberSaveable { mutableStateOf("") }
-    var contrasenaVisible by rememberSaveable { mutableStateOf(false) }
-    var confirmarContrasenaVisible by rememberSaveable { mutableStateOf(false) }
-
-
-    Scaffold(
-        containerColor = Color.White
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 24.dp)
-                .verticalScroll(rememberScrollState()), // Para que la pantalla se pueda deslizar si no cabe
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-
-            // --- Logos ---
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // TODO: Reemplaza R.drawable.logo1 con tu propio recurso de imagen
-                Image(
-                    painter = painterResource(id = R.drawable.logo_unap), // <-- CAMBIO AQUÍ
-                    contentDescription = "Logo 1",
-                    modifier = Modifier.size(80.dp)
-                )
-                // TODO: Reemplaza R.drawable.logo2 con tu propio recurso de imagen
-                Image(
-                    painter = painterResource(id =  R.drawable.logo_sis), // Placeholder
-                    contentDescription = "Logo 2",
-                    modifier = Modifier.size(80.dp)
-                )
+        OutlinedTextField(value = usuario, onValueChange = { usuario = it }, label = { Text("Usuario") }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = codigo, onValueChange = { codigo = it }, label = { Text("Código") }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(
+            value = contrasena,
+            onValueChange = { contrasena = it },
+            label = { Text("Contraseña") },
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = if (contrasenaVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            trailingIcon = {
+                val image = if (contrasenaVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                IconButton(onClick = { contrasenaVisible = !contrasenaVisible }) { Icon(imageVector = image, contentDescription = null) }
             }
+        )
+        Button(onClick = { /*TODO: Lógica de Login*/ }, modifier = Modifier.fillMaxWidth()) {
+            Text("Ingresar")
+        }
+    }
+}
 
-            Spacer(modifier = Modifier.height(16.dp))
 
-            // --- Textos del Equipo ---
-            Text("FinanzasMP", fontSize = 20.sp, style = MaterialTheme.typography.titleLarge)
-            Text("Monetiza tu vida", fontSize = 14.sp, textAlign = TextAlign.Center)
+@Composable
+fun RegistrationForm() {
+    // Este es el formulario de 4 filas que hicimos antes, simplificado.
+    // Puedes copiar el código completo de la respuesta anterior si quieres todos los campos.
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        var usuario by remember { mutableStateOf("") }
+        var contrasena by remember { mutableStateOf("") }
+        var confirmarContrasena by remember { mutableStateOf("") }
 
-            Spacer(modifier = Modifier.height(24.dp))
+        OutlinedTextField(value = usuario, onValueChange = { usuario = it }, label = { Text("Usuario") }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = contrasena, onValueChange = { contrasena = it }, label = { Text("Contraseña") }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = confirmarContrasena, onValueChange = { confirmarContrasena = it }, label = { Text("Confirmar Contraseña") }, modifier = Modifier.fillMaxWidth())
 
-            // --- Tabs de Ingresar / Registrarse ---
-            TabRow(
-                selectedTabIndex = 1, // El índice 1 corresponde a "Registrarse"
-                containerColor = Color.Transparent,
-                contentColor = MaterialTheme.colorScheme.primary
-            ) {
-                Tab(selected = false, onClick = { /* TODO: Navegar a Login */ }, text = { Text("Ingresar") })
-                Tab(selected = true, onClick = { }, text = { Text("Registrarse") })
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // --- Campos del Formulario de Registro ---
-            OutlinedTextField(
-                value = nombreCompleto,
-                onValueChange = { nombreCompleto = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Nombre Completo") },
-                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = usuario,
-                onValueChange = { usuario = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Usuario") },
-                leadingIcon = { Icon(Icons.Default.AccountCircle, contentDescription = null) },
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = correo,
-                onValueChange = { correo = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Correo Electrónico") },
-                leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = codigo,
-                onValueChange = { codigo = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Código (Opcional)") },
-                leadingIcon = { Icon(Icons.Default.QrCodeScanner, contentDescription = null) },
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = contrasena,
-                onValueChange = { contrasena = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Contraseña") },
-                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-                visualTransformation = if (contrasenaVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                trailingIcon = {
-                    val image = if (contrasenaVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                    IconButton(onClick = { contrasenaVisible = !contrasenaVisible }) {
-                        Icon(imageVector = image, contentDescription = "Mostrar/Ocultar contraseña")
-                    }
-                }
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = confirmarContrasena,
-                onValueChange = { confirmarContrasena = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Confirmar Contraseña") },
-                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-                visualTransformation = if (confirmarContrasenaVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                trailingIcon = {
-                    val image = if (confirmarContrasenaVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                    IconButton(onClick = { confirmarContrasenaVisible = !confirmarContrasenaVisible }) {
-                        Icon(imageVector = image, contentDescription = "Mostrar/Ocultar contraseña")
-                    }
-                }
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // --- Botón de Registro ---
-            Button(
-                onClick = {
-                    // TODO: Aquí va la lógica para registrar al usuario
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00695C)) // Color verde/teal
-            ) {
-                Text("Registrarse", Modifier.padding(vertical = 8.dp))
-            }
+        Button(onClick = { /*TODO: Lógica de Registro*/ }, modifier = Modifier.fillMaxWidth()) {
+            Text("Registrarse")
         }
     }
 }
