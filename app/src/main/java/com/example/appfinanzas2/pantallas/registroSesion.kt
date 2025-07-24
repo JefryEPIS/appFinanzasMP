@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.appfinanzas2.R // Asegúrate de que este import sea correcto
 
-@OptIn(ExperimentalAnimationApi::class)
+@Preview()
 @Composable
 fun AuthenticationScreen() {
     // 1. Un estado para controlar todo. Si es true, muestra Login. Si es false, muestra Registro.
@@ -146,11 +146,4 @@ fun RegistrationForm() {
             Text("Registrarse")
         }
     }
-}
-
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewAuthenticationScreen() {
-    AuthenticationScreen()
 }
