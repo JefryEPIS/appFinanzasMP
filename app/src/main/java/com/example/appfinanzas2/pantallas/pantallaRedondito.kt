@@ -275,3 +275,9 @@ data class PieData(
     val percentage: Float,
     val color: Color
 )
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewBalanceScreen() {
+    BalanceScreen()
+}
