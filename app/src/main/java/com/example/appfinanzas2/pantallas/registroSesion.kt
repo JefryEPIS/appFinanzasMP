@@ -1,5 +1,6 @@
 package com.example.appfinanzas2.pantallas
 
+import com.example.appfinanzas2.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -25,7 +26,9 @@ import androidx.compose.ui.unit.sp
 // Reemplaza com.example.appfinanzas2.R con la ruta de tu paquete
 // import com.example.appfinanzas2.R
 
+
 @Composable
+@Preview(showBackground = true)
 fun RegistrationScreen(){
 
     // Estados para guardar lo que el usuario escribe en cada campo
@@ -60,13 +63,13 @@ fun RegistrationScreen(){
             ) {
                 // TODO: Reemplaza R.drawable.logo1 con tu propio recurso de imagen
                 Image(
-                    painter = painterResource(id = android.R.drawable.ic_menu_camera), // Placeholder
+                    painter = painterResource(id = R.drawable.logo_unap), // <-- CAMBIO AQUÍ
                     contentDescription = "Logo 1",
                     modifier = Modifier.size(80.dp)
                 )
                 // TODO: Reemplaza R.drawable.logo2 con tu propio recurso de imagen
                 Image(
-                    painter = painterResource(id = android.R.drawable.ic_dialog_map), // Placeholder
+                    painter = painterResource(id =  R.drawable.logo_sis), // Placeholder
                     contentDescription = "Logo 2",
                     modifier = Modifier.size(80.dp)
                 )
@@ -186,14 +189,4 @@ fun RegistrationScreen(){
             }
         }
     }
-}
-
-// --- Vista Previa para ver el diseño en Android Studio ---
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewRegistrationScreen() {
-    // Es buena práctica envolver la preview en tu tema de la app
-    // AppFinanzasTheme {
-    RegistrationScreen()
-    // }
 }
