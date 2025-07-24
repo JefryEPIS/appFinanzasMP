@@ -23,10 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// Reemplaza com.example.appfinanzas2.R con la ruta de tu paquete
-// import com.example.appfinanzas2.R
-
-
 @Composable
 @Preview(showBackground = true)
 fun RegistrationScreen(){
@@ -43,7 +39,7 @@ fun RegistrationScreen(){
 
 
     Scaffold(
-        containerColor = Color(0xFFE0F7FA) // Un color de fondo azul claro similar al de tu imagen
+        containerColor = Color.White
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -78,8 +74,8 @@ fun RegistrationScreen(){
             Spacer(modifier = Modifier.height(16.dp))
 
             // --- Textos del Equipo ---
-            Text("<Team>", fontSize = 20.sp, style = MaterialTheme.typography.titleLarge)
-            Text("<Frase frase frase frase>", fontSize = 14.sp, textAlign = TextAlign.Center)
+            Text("FinanzasMP", fontSize = 20.sp, style = MaterialTheme.typography.titleLarge)
+            Text("Monetiza tu vida", fontSize = 14.sp, textAlign = TextAlign.Center)
 
             Spacer(modifier = Modifier.height(24.dp))
 
